@@ -1,11 +1,6 @@
 # For the SET-2 switch to SET-2 branch
 # SafeSquidLabs_technical-task
 This project provides a comprehensive Bash script designed to monitor various system resources on a proxy server. The script offers real-time insights into system performance, ensuring efficient resource management and quick identification of potential issues.
-
-Got it! I'll update the README file with the new heading and ensure it aligns with the evaluation criteria.
-
-### Updated README File
-
 ---
 
 # Monitoring System Resources for a Proxy Server
