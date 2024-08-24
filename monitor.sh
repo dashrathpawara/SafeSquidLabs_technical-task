@@ -134,16 +134,6 @@ dashboard() {
     print_in_color "green" "-------------------------"
 }
 
-# Function to display countdown timer
-countdown_timer() {
-    local seconds=$1
-    while [ $seconds -gt 0 ]; do
-        echo -ne "Refreshing in $seconds\033[0K\r"
-        sleep 1
-        ((seconds--))
-    done
-}
-
 # Main script logic
 while true; do
     case "$1" in
@@ -175,6 +165,6 @@ while true; do
             dashboard
             ;;
     esac
-    countdown_timer 20
+    sleep 20
     [ -z "$1" ] && clear
 done
