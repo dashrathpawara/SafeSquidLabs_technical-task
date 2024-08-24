@@ -43,7 +43,7 @@ This project involves creating a Bash script to automate security audits and ser
 
 Run the script:
 ```bash
-./security_audit.sh
+sudo ./security_audit.sh
 ```
 
 ### Customizing the Script
