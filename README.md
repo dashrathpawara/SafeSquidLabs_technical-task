@@ -2,7 +2,7 @@
 # SafeSquidLabs_technical-task
 
 ---
-##Important : I have Amazon linux.
+## Important : I have used Amazon linux.
 # Automatic Security Audit and Server Hardening Script
 
 
