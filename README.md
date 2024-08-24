@@ -107,7 +107,7 @@ main() {
 #### Reporting and Alerting
 
 - Generate a summary report of the security audit and hardening process, highlighting any issues that need attention.
-
----
-
-This `README.md` file provides a comprehensive overview of the script, its features, installation process, and usage instructions. Let me know if you need any further adjustments!
+## To get detailed report:  
+```bash
+cat /var/log/security.log
+```
