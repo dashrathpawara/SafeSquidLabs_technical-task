@@ -70,6 +70,7 @@ This Bash script monitors various system resources and presents them in a dashbo
    - **Output**: A dashboard displaying top applications, network statistics, disk usage, system load, memory usage, process monitoring, and service status.
 
 ### Installation
+## Update the system and install git 
 1. Clone the repository or download the script file.
 2. Make the script executable:
    ```bash
