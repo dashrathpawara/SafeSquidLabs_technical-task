@@ -55,7 +55,7 @@ check_non_standard_ports() {
 # Firewall and Network Security
 verify_firewall_status() {
   echo "Verifying firewall status:"
-  ufw status
+  systemctl status firewalld
   iptables -L
 }
 
@@ -85,18 +85,14 @@ ensure_security_updates() {
 
 check_security_updates() {
   echo "Checking for available security updates:"
-  if command -v yum &> /dev/null; then
-    yum check-update --security
-  elif command -v apt-get &> /dev/null; then
-    apt-get -s upgrade | grep -i security
-  fi
+  yum check-update --security
 }
 
 # Log Monitoring
 monitor_logs() {
   echo "Checking for suspicious log entries:"
-  grep "Failed password" /var/log/auth.log
-  grep "Invalid user" /var/log/auth.log
+  grep "Failed password" /var/log/secure
+  grep "Invalid user" /var/log/secure
 }
 
 # Server Hardening Steps
@@ -128,14 +124,9 @@ secure_bootloader() {
 
 automate_updates() {
   echo "Automating updates:"
-  if command -v yum &> /dev/null; then
-    yum install -y yum-cron
-    systemctl enable yum-cron
-    systemctl start yum-cron
-  elif command -v apt-get &> /dev/null; then
-    apt-get install -y unattended-upgrades
-    dpkg-reconfigure -plow unattended-upgrades
-  fi
+  yum install -y yum-cron
+  systemctl enable yum-cron
+  systemctl start yum-cron
 }
 
 # Reporting and Alerting
@@ -156,7 +147,7 @@ generate_summary_report() {
     netstat -tuln | grep -v ':22\|:80\|:443'
 
     echo "Firewall and Network Security:"
-    ufw status
+    systemctl status firewalld
     iptables -L
 
     echo "IP vs. Network Configuration Checks:"
@@ -164,23 +155,12 @@ generate_summary_report() {
     ip -o -6 addr list
 
     echo "Security Updates and Patching:"
-    if command -v yum &> /dev/null; then
-      yum check-update --security
-    elif command -v apt-get &> /dev/null; then
-      apt-get -s upgrade | grep -i security
-    fi
+    yum check-update --security
 
     echo "Log Monitoring:"
-    grep "Failed password" /var/log/auth.log
-    grep "Invalid user" /var/log/auth.log
-  } > /var/log/security_audit_report.txt
-}
-
-send_email_alerts() {
-  echo "Configuring email alerts for critical vulnerabilities:"
-  if grep -q "Failed password" /var/log/auth.log; then
-    echo "Critical vulnerability found!" | mail -s "Security Alert" admin@example.com
-  fi
+    grep "Failed password" /var/log/secure
+    grep "Invalid user" /var/log/secure
+  } > /var/log/security.log
 }
 
 # Main function to call all checks
@@ -206,7 +186,6 @@ main() {
   secure_bootloader
   automate_updates
   generate_summary_report
-  send_email_alerts
 }
 
 # Execute main function
