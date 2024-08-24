@@ -175,6 +175,6 @@ while true; do
             dashboard
             ;;
     esac
-    sleep 20
+    countdown_timer 20
     [ -z "$1" ] && clear
 done
