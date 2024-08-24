@@ -87,7 +87,6 @@ This Bash script monitors various system resources and presents them in a dashbo
   ```
 - Use command-line switches to view specific parts of the dashboard:
   ```bash
-  ./monitor.sh --install-tools
   ./monitor.sh --top-apps
   ./monitor.sh --network
   ./monitor.sh --disk
