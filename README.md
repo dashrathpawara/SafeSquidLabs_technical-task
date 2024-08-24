@@ -9,8 +9,6 @@ This project provides a comprehensive Bash script designed to monitor various sy
 ## Introduction
 This Bash script monitors various system resources and presents them in a dashboard format. The script refreshes the data every 20 seconds, providing real-time insights. Additionally, it allows users to call specific parts of the dashboard individually using command-line switches.
 
-Sure! I'll provide more detailed explanations for each requirement.
-
 ### Requirements
 
 1. **Top 10 Most Used Applications**
