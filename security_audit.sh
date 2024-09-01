@@ -1,5 +1,29 @@
 #!/bin/bash
 
+# Function to check if a service is available and install it if not
+check_and_install_service() {
+  local service_name=$1
+  local package_name=$2
+
+  if ! systemctl is-active --quiet "$service_name"; then
+    echo "$service_name is not running. Attempting to install..."
+    yum install -y "$package_name"
+    if systemctl is-enabled --quiet "$service_name"; then
+      echo "$service_name is installed and enabled."
+    else
+      echo "Failed to install or enable $service_name."
+    fi
+  else
+    echo "$service_name is already running."
+  fi
+}
+
+# Check and install iptables and firewalld if not available
+check_firewall_services() {
+  check_and_install_service "iptables" "iptables-services"
+  check_and_install_service "firewalld" "firewalld"
+}
+
 # User and Group Audits
 list_users_and_groups() {
   echo "Starting: Listing all users and groups"
@@ -19,7 +43,9 @@ check_users_without_passwords() {
   awk -F: '($2 == "" || $7 !~ /\/bin\/(bash|sh)/) {print $1}' /etc/passwd
   echo "Completed: Checking for users without passwords or with non-standard shells"
 }
+
 sleep 5
+
 # File and Directory Permissions
 scan_world_writable_files() {
   echo "Starting: Scanning for world-writable files and directories"
@@ -60,7 +86,9 @@ check_non_standard_ports() {
   netstat -tuln | grep -v ':22\|:80\|:443'
   echo "Completed: Checking for services listening on non-standard or insecure ports"
 }
+
 sleep 5
+
 # Firewall and Network Security
 verify_firewall_status() {
   echo "Starting: Verifying firewall status"
@@ -68,7 +96,9 @@ verify_firewall_status() {
   iptables -L
   echo "Completed: Verifying firewall status"
 }
+
 sleep 5
+
 # IP vs. Network Configuration Checks
 identify_ip_addresses() {
   echo "Starting: Identifying public and private IP addresses"
@@ -88,7 +118,9 @@ summarize_ip_addresses() {
   ip -o -6 addr list
   echo "Completed: Summary of all IP addresses"
 }
+
 sleep 5
+
 # Security Updates and Patching
 ensure_security_updates() {
   echo "Starting: Ensuring server is configured for security updates"
@@ -109,7 +141,9 @@ monitor_logs() {
   grep "Invalid user" /var/log/secure
   echo "Completed: Checking for suspicious log entries"
 }
+
 sleep 5
+
 # Server Hardening Steps
 setup_ssh_key_authentication() {
   echo "Starting: Setting up SSH key-based authentication and disabling password login for root"
@@ -127,28 +161,37 @@ disable_ipv6() {
   echo "net.ipv6.conf.default.disable_ipv6 = 1" >> /etc/sysctl.conf
   echo "Completed: Disabling IPv6"
 }
+
 sleep 5
+
 update_safesquid() {
   echo "Starting: Updating SafeSquid to listen on the correct IPv4 address"
   sed -i 's/^ListenAddress.*/ListenAddress 0.0.0.0/' /etc/safesquid/safesquid.conf
   systemctl restart safesquid
   echo "Completed: Updating SafeSquid to listen on the correct IPv4 address"
 }
+
 sleep 5
+
 secure_bootloader() {
   echo "Starting: Securing the bootloader with a password"
   grub2-setpassword
   echo "Completed: Securing the bootloader with a password"
 }
+
 sleep 5
+
 automate_updates() {
   echo "Starting: Automating updates"
-  yum install -y yum-cron
-  systemctl enable yum-cron
-  systemctl start yum-cron
+  # Install dnf-automatic instead of yum-cron for automated updates
+  yum install -y dnf-automatic
+  systemctl enable dnf-automatic
+  systemctl start dnf-automatic
   echo "Completed: Automating updates"
 }
+
 sleep 5
+
 # Reporting and Alerting
 generate_summary_report() {
   echo "Starting: Generating summary report"
@@ -186,6 +229,7 @@ generate_summary_report() {
 
 # Main function to call all checks
 main() {
+  check_firewall_services
   list_users_and_groups
   check_root_users
   check_users_without_passwords
@@ -204,10 +248,5 @@ main() {
   setup_ssh_key_authentication
   disable_ipv6
   update_safesquid
-  secure_bootloader
-  automate_updates
-  generate_summary_report
-}
-
-# Execute main function
-main
+ }
+ main
